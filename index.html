@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECH SYMPOSIUM 2026 - AI THEME</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #040d14; overflow-x: hidden; flex-direction: column; padding: 40px 20px; }
+        #networkCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #0a1f30 0%, #040d14 100%); }
+        .wrapper { position: relative; width: 100%; max-width: 550px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 238, 255, 0.2); backdrop-filter: blur(15px); border-radius: 20px; padding: 30px; color: #fff; box-shadow: 0 0 40px rgba(0, 238, 255, 0.1); }
+        h2 { font-size: 26px; text-align: center; color: #0ef; text-shadow: 0 0 15px #0ef; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;}
+        .reg-info { text-align: center; margin-bottom: 25px; padding: 10px; border: 1px solid #0ef; border-radius: 10px; background: rgba(0, 255, 239, 0.05); font-weight: 600; color: #0ef; }
+        .input-box { position: relative; width: 100%; height: 50px; border-bottom: 2px solid rgba(0, 238, 255, 0.5); margin: 25px 0; }
+        .input-box input, .input-box select { width: 100%; height: 100%; background: transparent; border: none; outline: none; font-size: 16px; color: #fff; padding: 0 35px 0 5px; }
+        .input-box label { position: absolute; top: 50%; left: 5px; transform: translateY(-50%); font-size: 16px; color: rgba(255,255,255,0.7); pointer-events: none; transition: .5s; }
+        .input-box input:focus~label, .input-box input:valid~label { top: -5px; color: #0ef; font-size: 14px; }
+        .input-box i { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #0ef; }
+        .events-title { text-align: center; margin: 25px 0 15px; color: #0ef; font-weight: bold; font-size: 14px; text-transform: uppercase;}
+        .events-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; }
+        .event-item input { display: none; }
+        .event-label { display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); padding: 15px 5px; text-align: center; border-radius: 12px; border: 1px solid rgba(0,238,255,0.1); cursor: pointer; transition: 0.3s; font-size: 11px; min-height: 85px; }
+        .event-label i { font-size: 22px; margin-bottom: 8px; color: #0ef; }
+        .event-item input:checked + .event-label { background: #0ef; color: #081b29; font-weight: bold; box-shadow: 0 0 20px #0ef; border-color: transparent; }
+        button { width: 100%; height: 50px; background: #0ef; border: none; outline: none; border-radius: 40px; cursor: pointer; font-size: 16px; color: #081b29; font-weight: 700; margin-top: 30px; transition: .5s; text-transform: uppercase; }
+        button:hover { background: #fff; box-shadow: 0 0 25px #fff; transform: translateY(-2px); }
+        .admin-panel { margin-top: 30px; width: 100%; max-width: 550px; background: rgba(0, 0, 0, 0.3); padding: 25px; border-radius: 20px; border: 1px solid rgba(0, 238, 255, 0.3); color: #fff; backdrop-filter: blur(5px); }
+        .admin-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .admin-item { background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #0ef; font-size: 13px; }
+        .admin-item span { font-weight: bold; font-size: 18px; color: #0ef; }
+        .success-content { text-align: center; padding: 20px; }
+        .success-content i { font-size: 70px; color: #0ef; margin-bottom: 20px; animation: scaleUp 0.5s ease; }
+        @keyframes scaleUp { from { transform: scale(0); } to { transform: scale(1); } }
+    </style>
+</head>
+<body>
+
+<canvas id="networkCanvas"></canvas>
+
+<div class="wrapper" id="mainWrapper">
+    <h2>Tech Symposium 2026</h2>
+    <div class="reg-info"><i class="fas fa-microchip"></i> Live Registrations: <span id="reg-count">0</span></div>
+
+    <div id="formContent">
+        <form id="regForm">
+            <div class="input-box">
+                <input type="text" name="Student_Name" required>
+                <label>Full Name</label>
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="input-box">
+                <input type="text" name="College_Name" required>
+                <label>College Name</label>
+                <i class="fas fa-university"></i>
+            </div>
+            <div class="input-box">
+                <input type="email" name="Email" required>
+                <label>Email Address</label>
+                <i class="fas fa-envelope"></i>
+            </div>
+            <div class="input-box">
+                <select name="Year" required style="color: #0ef; background: #040d14;">
+                    <option value="" disabled selected>Select Year</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                </select>
+            </div>
+            <div class="input-box">
+                <input type="tel" name="Phone_Number" required>
+                <label>Phone Number</label>
+                <i class="fas fa-phone"></i>
+            </div>
+
+            <p class="events-title">Choose Your Events</p>
+            <div class="events-grid">
+                <div class="event-item"><input type="checkbox" id="e1" name="Solo_Dance" value="Yes"><label for="e1" class="event-label"><i class="fas fa-user-ninja"></i>Solo Dance</label></div>
+                <div class="event-item"><input type="checkbox" id="e2" name="Group_Dance" value="Yes"><label for="e2" class="event-label"><i class="fas fa-users"></i>Group Dance</label></div>
+                <div class="event-item"><input type="checkbox" id="e3" name="Singing" value="Yes"><label for="e3" class="event-label"><i class="fas fa-microphone-alt"></i>Singing</label></div>
+                <div class="event-item"><input type="checkbox" id="e4" name="Mime" value="Yes"><label for="e4" class="event-label"><i class="fas fa-mask"></i>Mime</label></div>
+                <div class="event-item"><input type="checkbox" id="e5" name="Quiz" value="Yes"><label for="e5" class="event-label"><i class="fas fa-lightbulb"></i>Quiz</label></div>
+                <div class="event-item"><input type="checkbox" id="e6" name="PPT" value="Yes"><label for="e6" class="event-label"><i class="fas fa-file-powerpoint"></i>PPT</label></div>
+                <div class="event-item"><input type="checkbox" id="e7" name="Debugging" value="Yes"><label for="e7" class="event-label"><i class="fas fa-bug"></i>Debug</label></div>
+            </div>
+            <button type="submit" id="submitBtn">Submit Registration</button>
+        </form>
+    </div>
+</div>
+
+<div class="admin-panel">
+    <h3 style="text-align: center; color: #0ef; margin-bottom: 20px;"><i class="fas fa-chart-bar"></i> Event Statistics</h3>
+    <div class="admin-grid">
+        <div class="admin-item">Solo Dance <span id="admin-Solo_Dance">0</span></div>
+        <div class="admin-item">Group Dance <span id="admin-Group_Dance">0</span></div>
+        <div class="admin-item">Singing <span id="admin-Singing">0</span></div>
+        <div class="admin-item">Mime <span id="admin-Mime">0</span></div>
+        <div class="admin-item">Quiz <span id="admin-Quiz">0</span></div>
+        <div class="admin-item">PPT <span id="admin-PPT">0</span></div>
+        <div class="admin-item">Debug <span id="admin-Debugging">0</span></div>
+    </div>
+</div>
+
+<script>
+    // Animation Logic
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function init() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; particles = []; for(let i=0; i<80; i++) particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, sx:Math.random()-0.5, sy:Math.random()-0.5}); }
+    function draw() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p => { p.x+=p.sx; p.y+=p.sy; if(p.x<0||p.x>canvas.width) p.sx*=-1; if(p.y<0||p.y>canvas.height) p.sy*=-1; ctx.fillStyle="#0ef"; ctx.beginPath(); ctx.arc(p.x,p.y,2,0,Math.PI*2); ctx.fill(); }); requestAnimationFrame(draw); }
+    window.onresize = init; init(); draw();
+
+    // Stats Logic
+    const eventList = ['Solo_Dance', 'Group_Dance', 'Singing', 'Mime', 'Quiz', 'PPT', 'Debugging'];
+    function refreshData() {
+        document.getElementById('reg-count').innerText = localStorage.getItem('symCount') || 0;
+        eventList.forEach(ev => { document.getElementById('admin-' + ev).innerText = localStorage.getItem('cnt_' + ev) || 0; });
+    }
+    window.onload = refreshData;
+
+    // Form Handling
+    const regForm = document.getElementById('regForm');
+    const formContent = document.getElementById('formContent');
+    const originalFormHTML = formContent.innerHTML; // பழைய படிவத்தை சேமித்து வைக்கிறோம்
+
+    function resetFormUI() {
+        formContent.innerHTML = originalFormHTML; // பழைய படிவத்தை அப்படியே கொண்டு வருகிறோம்
+        refreshData();
+        // புதிய படிவத்திற்கு ஈவென்ட் லிசனர் (Event Listener) மீண்டும் கொடுக்க வேண்டும்
+        document.getElementById('regForm').onsubmit = handleFormSubmit;
+    }
+
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const currentForm = document.getElementById('regForm');
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        const formData = new FormData(currentForm);
+        
+        try {
+            const response = await fetch("https://formspree.io/f/mojyaarl", {
+                method: "POST",
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (response.ok) {
+                // Update Storage
+                localStorage.setItem('symCount', parseInt(localStorage.getItem('symCount') || 0) + 1);
+                eventList.forEach(ev => {
+                    if (formData.get(ev) === "Yes") {
+                        localStorage.setItem('cnt_' + ev, parseInt(localStorage.getItem('cnt_' + ev) || 0) + 1);
+                    }
+                });
+
+                // Show Success Message
+                formContent.innerHTML = `
+                    <div class="success-content">
+                        <i class="fas fa-check-circle"></i>
+                        <h2 style="color: #0ef; margin-bottom: 10px;">Thank You!</h2>
+                        <p style="color: #fff; font-size: 16px;">Registration Successfully Completed.</p>
+                        <button onclick="resetFormUI()" style="margin-top: 30px; width: 220px;">Register New Person</button>
+                    </div>
+                `;
+                refreshData();
+            } else {
+                alert("Error! Please try again.");
+                btn.innerText = "Submit Registration";
+                btn.disabled = false;
+            }
+        } catch (err) {
+            alert("Network Error!");
+            btn.innerText = "Submit Registration";
+            btn.disabled = false;
+        }
+    }
+
+    regForm.onsubmit = handleFormSubmit;
+</script>
+</body>
+</html>
